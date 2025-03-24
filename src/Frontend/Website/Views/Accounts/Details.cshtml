@@ -1,0 +1,64 @@
+﻿@model AccountsViewModel
+
+@{
+    ViewData["Title"] = "Account Details";
+}
+
+<h2>My Account</h2>
+
+<div>
+    <p><strong>Code:</strong> @Model.account.Code</p>
+    <p><strong>Person Code:</strong> @Model.account.Person_Code</p>
+    <p><strong>Account Number:</strong> @Model.account.Account_Number</p>
+    <p><strong>Outstanding Balance:</strong> @Model.account.Outstanding_Balance.ToString("C", new CultureInfo("en-ZA"))</p>
+</div>
+
+<a asp-controller="Persons" asp-action="Details" asp-route-id="@Model.account.Person_Code" class="btn btn-secondary">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+</a>
+<a asp-action="Edit" asp-route-id="@Model.account.Code" class="btn btn-warning">
+    <i class="fa fa-eraser" aria-hidden="true"></i>
+</a>
+<a asp-controller="Transactions" asp-action="Create" class="btn btn-warning">
+    Make A Transaction
+</a>
+
+<div>
+    <h3>My Transactions</h3>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Person Code</th>
+            <th>transaction Number</th>
+            <th>Outstanding Balance</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model.transactions)
+        {
+            <tr>
+                <td>@transaction.Code</td>
+                <td>@transaction.Account_Code</td>
+                <td>@transaction.Transaction_Date</td>
+                <td>@transaction.Capture_Date</td>
+                <td>@transaction.Amount.ToString("C", new CultureInfo("en-ZA"))</td>
+                <td>@transaction.Description</td>
+                <td>
+                    <a asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Code" class="btn btn-info">
+                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@transaction.Code" class="btn btn-warning">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@transaction.Code" class="btn btn-danger">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

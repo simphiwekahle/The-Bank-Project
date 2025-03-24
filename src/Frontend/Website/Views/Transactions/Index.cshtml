@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Shared.Domains.Transactions.Models.TransactionsModel>
+
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h2>transactions</h2>
+<a asp-action="Create" class="btn btn-primary">Create New transaction</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Person Code</th>
+            <th>transaction Number</th>
+            <th>Outstanding Balance</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model)
+        {
+            <tr>
+                <td>@transaction.Code</td>
+                <td>@transaction.Account_Code</td>
+                <td>@transaction.Transaction_Date</td>
+                <td>@transaction.Capture_Date</td>
+                <td>@transaction.Amount</td>
+                <td>@transaction.Description</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@transaction.Code" class="btn btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@transaction.Code" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@transaction.Code" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

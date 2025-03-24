@@ -1,0 +1,21 @@
+﻿@model TransactionsModel
+
+@{
+    ViewData["Title"] = "Create Transaction";
+}
+
+<h2>Make A Transaction</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Account_Code"></label>
+        <input asp-for="Account_Code" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Amount"></label>
+        <input asp-for="Amount" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

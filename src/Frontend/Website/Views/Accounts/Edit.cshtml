@@ -1,0 +1,26 @@
+﻿@model Shared.Domains.Accounts.Models.AccountsModel
+
+@{
+    ViewData["Title"] = "Edit Account";
+}
+
+<h2>Edit Account</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Code" />
+    <div class="form-group">
+        <label asp-for="Person_Code"></label>
+        <input asp-for="Person_Code" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Account_Number"></label>
+        <input asp-for="Account_Number" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Outstanding_Balance"></label>
+        <input asp-for="Outstanding_Balance" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

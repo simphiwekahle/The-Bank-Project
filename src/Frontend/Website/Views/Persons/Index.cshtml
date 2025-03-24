@@ -1,0 +1,39 @@
+﻿@model List<PersonsModel>
+
+@{
+    ViewData["Title"] = "Persons List";
+}
+
+<h2>Persons List</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>ID Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>@person.Code</td>
+                <td>@person.Name</td>
+                <td>@person.Surname</td>
+                <td>@person.Id_Number</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@person.Code" class="btn btn-info">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@person.Code" class="btn btn-primary">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@person.Code" class="btn btn-danger mb-2">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

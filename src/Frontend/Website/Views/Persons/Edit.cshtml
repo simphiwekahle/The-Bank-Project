@@ -1,0 +1,28 @@
+﻿@model Shared.Domains.Persons.Models.PersonsModel
+
+@{
+    ViewData["Title"] = "Edit Person";
+}
+
+<h2>Edit Person</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Code" />
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Surname"></label>
+        <input asp-for="Surname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Id_Number"></label>
+        <input asp-for="Id_Number" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>

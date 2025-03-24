@@ -1,0 +1,34 @@
+﻿@model PersonsModel
+
+@{
+    Layout = "~/Views/Access/AccessLayout.cshtml";
+    ViewData["Title"] = "Create Person";
+}
+
+<h2>Create Person</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Surname"></label>
+        <input asp-for="Surname" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Id_Number"></label>
+        <input asp-for="Id_Number" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+
+@* <p>
+    <a asp-action="Index">Back to List</a>
+</p> *@

@@ -1,0 +1,42 @@
+﻿@model PersonsViewModel
+
+@{
+    ViewData["Title"] = "Person Details";
+}
+
+<h2>Person Details</h2>
+
+<div>
+    <p><strong>Code:</strong> @Model.persons.Code</p>
+    <p><strong>Name:</strong> @Model.persons.Name</p>
+    <p><strong>Surname:</strong> @Model.persons.Surname</p>
+    <p><strong>ID Number:</strong> @Model.persons.Id_Number</p>
+</div>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.persons.Code">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</p>
+
+@if (Model.accounts.Count is not 0)
+{
+    <div>
+        <h3>My Accounts</h3>
+    </div>
+}
+
+
+<div class="container">
+    @foreach(var account in Model.accounts)
+    {
+        <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code">
+            <div class="features">
+                <div>
+                    <p><strong>Account Number:</strong>@account.Account_Number</p>
+                </div>
+                
+            </div>
+        </a>
+    }
+</div>
+

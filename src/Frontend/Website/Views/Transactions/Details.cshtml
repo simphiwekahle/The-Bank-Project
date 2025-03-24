@@ -1,0 +1,19 @@
+﻿@model TransactionsModel
+
+@{
+    ViewData["Title"] = "Transaction Details";
+}
+
+<h2>Transaction Details</h2>
+
+<div>
+    <p><strong>Code:</strong> @Model.Code</p>
+    <p><strong>Account Code:</strong> @Model.Account_Code</p>
+    <p><strong>Transaction Date:</strong> @Model.Transaction_Date</p>
+    <p><strong>Capture Date:</strong> @Model.Capture_Date</p>
+    <p><strong>Amount:</strong> @Model.Amount.ToString("C", new CultureInfo("en-ZA"))</p>
+    <p><strong>Description:</strong> @Model.Description</p>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-action="Edit" asp-route-id="@Model.Code" class="btn btn-warning">Edit</a>

@@ -1,0 +1,25 @@
+﻿@model Shared.Domains.Accounts.Models.AccountsModel
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<h2>Create Account</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Person_Code"></label>
+        <input asp-for="Person_Code" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Account_Number"></label>
+        <input asp-for="Account_Number" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Outstanding_Balance"></label>
+        <input asp-for="Outstanding_Balance" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

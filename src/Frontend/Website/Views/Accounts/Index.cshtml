@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Shared.Domains.Accounts.Models.AccountsModel>
+
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<h2>Accounts</h2>
+<a asp-action="Create" class="btn btn-primary">Create New Account</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Person Code</th>
+            <th>Account Number</th>
+            <th>Outstanding Balance</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model)
+        {
+            <tr>
+                <td>@account.Code</td>
+                <td>@account.Person_Code</td>
+                <td>@account.Account_Number</td>
+                <td>@account.Outstanding_Balance</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@account.Code" class="btn btn-info">Details</a>
+                    <a asp-action="Edit" asp-route-id="@account.Code" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@account.Code" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
