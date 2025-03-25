@@ -34,13 +34,13 @@
     @await RenderSectionAsync("Scripts", required: false)
     <script>
         $(function () {
-            const currentPage = location.pathname;
+            const currentPage = location.pathname.toLowerCase();
             $('.nav-tabs li a').each(function () {
                 const $this = $(this);
-                if (currentPage. toLowerCase().indexOf($this.attr('href').toLowerCase()) =- 1) {
+                if (currentPage.includes($this.attr('href').toLowerCase())) {
                     $this.addClass('active');
                 }
-            })
-        })
+            });
+        });
     </script>
 }

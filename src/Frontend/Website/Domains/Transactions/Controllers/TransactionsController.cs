@@ -20,9 +20,10 @@ public class TransactionsController(
     public async Task<IActionResult> Details(int id)
     {
         var transaction = await transactionsRepository.RetrieveSingleAsync(id);
+
         if (transaction is null)
             return NotFound();
-
+        
         return View(transaction);
     }
 
@@ -40,7 +41,7 @@ public class TransactionsController(
             var addedTransaction = await transactionsServices.AddTransactionAsync(transaction);
 
             if (addedTransaction is not null)
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Accounts");
         }
         return View(transaction);
     }

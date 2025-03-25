@@ -14,15 +14,16 @@ public class AccountsController(
 {
     public async Task<IActionResult> Index()
     {
-        //var accounts = await accountsRepository.RetrieveAllAsync();
-        //return View(accounts);
-        return null;
+        var accounts = await accountsRepository.RetrieveAllAsync();
+        return View(accounts);
     }
 
     public async Task<IActionResult> Details(int id)
     {
         var account = await accountsService.GetSingleAccountAsync(id);
-        if (account == null) return NotFound();
+
+        if (account == null)
+            return NotFound();
         return View(account);
     }
 
@@ -38,7 +39,9 @@ public class AccountsController(
         if (ModelState.IsValid)
         {
             var createdAccount = await accountsService.AddAccountAsync(account);
-            if (createdAccount != null) return RedirectToAction(nameof(Index));
+
+            if (createdAccount != null) 
+                return RedirectToAction("Details", "Persons");
         }
 
         return View(account);

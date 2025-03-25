@@ -12,5 +12,7 @@ public interface IAccountsRepository
 
     Task<bool> UpdateAsync(int code, AccountsModel account);
 
+    Task<bool> UpdateBalanceAsync(int code, decimal amount);
+
     Task<bool> DeleteAsync(int code);
 }

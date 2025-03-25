@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Website.Domains.Access.ViewModels;
+using Website.Domains.Persons.Services;
 
 namespace Website.Domains.Access.Controllers;
 
-public class AccessController : Controller
+public class AccessController(
+    IPersonsServices personsServices) : Controller
 {
      public IActionResult Login()
      {
@@ -21,28 +23,34 @@ public class AccessController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel modelLogin)
     {
-        if (modelLogin.Email == "user@example.com" &&
-            modelLogin.Password == "123")
+        if (ModelState.IsValid)
         {
-            List<Claim> claims = new List<Claim> {
+            var findPerson = (await personsServices.GetPersonsAsync())?
+            .FindAll(p =>
+                p.Email == modelLogin.Email &&
+                p.Password == modelLogin.Password);
+
+            if (findPerson is not null)
+            {
+                List<Claim> claims = new List<Claim> {
                     new Claim(ClaimTypes.NameIdentifier, modelLogin.Email),
                     new Claim("OtherProperties", "Example Role")
                 };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme);
 
-            AuthenticationProperties properties = new AuthenticationProperties()
-            {
-                AllowRefresh = true,
-                IsPersistent = modelLogin.KeepLoggedIn
-            };
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity), properties);
+                AuthenticationProperties properties = new AuthenticationProperties()
+                {
+                    AllowRefresh = true,
+                    IsPersistent = modelLogin.KeepLoggedIn
+                };
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity), properties);
 
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+            }
         }
-
-        ViewData["ValidateMEssage"] = "user not found";
+        ViewData["ValidateMessage"] = "user not found";
         return View();
     }
 

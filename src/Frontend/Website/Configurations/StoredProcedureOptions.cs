@@ -13,6 +13,7 @@ public class StoredProcedureOptions
 	public string InsertNewAccount { get; set; } = string.Empty;
 	public string UpdateAccountById { get; set; } = string.Empty;
 	public string DeleteAccountById { get; set; } = string.Empty;
+	public string UpdateAccountBalance { get; set; } = string.Empty;
 
 	public string GetAllTransactions { get; set; } = string.Empty;
 	public string GetTransactionByCode { get; set; } = string.Empty;

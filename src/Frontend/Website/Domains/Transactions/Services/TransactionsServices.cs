@@ -12,22 +12,28 @@ public class TransactionsServices(
     {
         var account = await accountsRepository.RetrieveSingleAsync(transaction!.Account_Code);
 
-        if (transaction is null)
+        if (account is null)
             return null;
 
         if (transaction is not null)
         {
             transaction.Description = "New transaction added";
+            transaction.Transaction_Date = DateTime.Now;
+            transaction.Capture_Date = DateTime.Now;
         }
 
         var newTransaction = await transactionsRepository.CreateAsync(transaction!);
 
+        var newBalance = account.Outstanding_Balance += transaction!.Amount;
+
         if (newTransaction is null ||
-            newTransaction.Transaction_Date > DateTime.Now || 
+            newTransaction.Transaction_Date > DateTime.Now ||
             newTransaction.Amount == 0)
         {
             return null;
         }
+
+        await accountsRepository.UpdateBalanceAsync(transaction.Account_Code, newBalance);
 
         return newTransaction;
     }

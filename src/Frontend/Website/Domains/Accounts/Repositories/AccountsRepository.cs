@@ -187,5 +187,44 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
             return false;
         }
     }
+
+    public async Task<bool> UpdateBalanceAsync(int code, decimal amount)
+    {
+        logger.LogInformation("Repository => Attempting to create a new person");
+
+        var dynamicParams = new DynamicParameters();
+
+        dynamicParams.Add(name: "@code", value: code, dbType: DbType.String, direction: ParameterDirection.Input);
+        dynamicParams.Add(name: "@account_number", value: amount, dbType: DbType.String, direction: ParameterDirection.Input);
+
+        using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
+
+        try
+        {
+            await sqlConnection.ExecuteAsync(
+                sql: storedProcedures.Value.UpdateAccountBalance,
+                param: new
+                {
+                    code,
+                    amount
+                },
+                commandType: CommandType.StoredProcedure);
+
+            logger.LogInformation(
+                "{Announcement}: Attempt to update account {Account} completed successfully",
+                "SUCCEEDED", code);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "{Announcement}: Attempt to update account {Account} was unsuccessful",
+                "FAILED", code);
+
+            return false;
+        }
+    }
 }
 

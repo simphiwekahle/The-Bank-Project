@@ -23,6 +23,8 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IPersonsRepository
 		dynamicParams.Add(name: "@name", value: person.Name, dbType: DbType.String, direction: ParameterDirection.Input);
 		dynamicParams.Add(name: "@surname", value: person.Surname, dbType: DbType.String, direction: ParameterDirection.Input);
 		dynamicParams.Add(name: "@id_number", value: person.Id_Number, dbType: DbType.String, direction: ParameterDirection.Input);
+		dynamicParams.Add(name: "@email", value: person.Email, dbType: DbType.String, direction: ParameterDirection.Input);
+		dynamicParams.Add(name: "@password", value: person.Password, dbType: DbType.String, direction: ParameterDirection.Input);
 
 		using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
 

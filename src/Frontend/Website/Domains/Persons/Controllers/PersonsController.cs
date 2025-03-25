@@ -8,6 +8,7 @@ namespace Website.Controllers;
 public class PersonsController(
     IPersonsServices personsService) : Controller
 {
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var persons = await personsService.GetPersonsAsync();
@@ -19,7 +20,8 @@ public class PersonsController(
         if (ModelState.IsValid)
         {
             var person = await personsService.GetSinglePersonAsync(id);
-            if (person == null)
+
+            if (person is null)
                 return NotFound();
 
             return View(person);
@@ -32,6 +34,7 @@ public class PersonsController(
         return View();
     }
 
+    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(PersonsModel person)
@@ -40,7 +43,7 @@ public class PersonsController(
         {
             var addedPerson = await personsService.AddPersonAsync(person);
             if (addedPerson != null)
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login", "Access");
         }
         return View(person);
     }

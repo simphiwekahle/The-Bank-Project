@@ -18,7 +18,7 @@ public class TransactionsRepository(
 
 		var dynamicParams = new DynamicParameters();
 
-		dynamicParams.Add(name: "@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+		dynamicParams.Add(name: "@code", dbType: DbType.Int32, direction: ParameterDirection.Output);
 		dynamicParams.Add(name: "@account_code", value: transaction.Account_Code, dbType: DbType.Int32, direction: ParameterDirection.Input);
 		dynamicParams.Add(name: "@transaction_date", value: transaction.Transaction_Date, dbType: DbType.DateTime, direction: ParameterDirection.Input);
 		dynamicParams.Add(name: "@capture_date", value: transaction.Capture_Date, dbType: DbType.DateTime, direction: ParameterDirection.Input);
@@ -34,7 +34,7 @@ public class TransactionsRepository(
 				param: dynamicParams,
 				commandType: CommandType.StoredProcedure);
 
-			transaction.Code = dynamicParams.Get<int>("@id");
+			transaction.Code = dynamicParams.Get<int>("@code");
 
 			logger.LogInformation(
 				"{Announcement}: Attempt to create a new transaction completed successfully with code {Transaction}",

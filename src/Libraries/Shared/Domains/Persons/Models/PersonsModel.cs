@@ -17,5 +17,14 @@ public class PersonsModel
 
 	[Required(ErrorMessage = "Please Enter Your ID Number")]
 	[Length (13, 13)]
-	public string Id_Number { get; set; } = string.Empty;
+    [Display(Name = "ID Number")]
+    public string Id_Number { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Please Enter an Email Address")]
+    [Display(Name = "Email")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Please Enter a Password")]
+    [Display(Name = "Password")]
+    public string Password { get; set; } = string.Empty;
 }
