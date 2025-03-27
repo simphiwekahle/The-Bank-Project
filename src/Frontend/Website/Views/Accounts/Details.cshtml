@@ -6,20 +6,35 @@
 
 <h2>My Account</h2>
 
-<div>
-    <p><strong>Code:</strong> @Model.account.Code</p>
-    <p><strong>Person Code:</strong> @Model.account.Person_Code</p>
-    <p><strong>Account Number:</strong> @Model.account.Account_Number</p>
-    <p><strong>Outstanding Balance:</strong> @Model.account.Outstanding_Balance.ToString("C", new CultureInfo("en-ZA"))</p>
+<div class="container mt-4">
+    <div class="card" style="max-width: 600px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <p><strong>Code:</strong> @Model.account.Code</p>
+                    <p><strong>Person Code:</strong> @Model.account.Person_Code</p>
+                    <p><strong>Account Number:</strong> @Model.account.Account_Number</p>
+                    <p><strong>Outstanding Balance:</strong> @Model.account.Outstanding_Balance.ToString("C", new CultureInfo("en-ZA"))</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<br />
+
 <a asp-controller="Persons" asp-action="Details" asp-route-id="@Model.account.Person_Code" class="btn btn-secondary">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    <i class="fa fa-arrow-left"></i>
 </a>
+
 <a asp-action="Edit" asp-route-id="@Model.account.Code" class="btn btn-warning">
-    <i class="fa fa-eraser" aria-hidden="true"></i>
+    <i class="fa fa-eraser"></i>
 </a>
-<a asp-controller="Transactions" asp-action="Create" class="btn btn-warning">
+
+<a asp-controller="Transactions" asp-action="Create" asp-route-id="@Model.account.Code" class="btn btn-warning">
     Make A Transaction
 </a>
 
@@ -49,13 +64,13 @@
                 <td>@transaction.Description</td>
                 <td>
                     <a asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Code" class="btn btn-info">
-                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                        <i class="fa fa-file-text"></i>
                     </a>
                     <a asp-action="Edit" asp-route-id="@transaction.Code" class="btn btn-warning">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-pencil"></i>
                     </a>
                     <a asp-action="Delete" asp-route-id="@transaction.Code" class="btn btn-danger">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <i class="fa fa-trash"></i>
                     </a>
                 </td>
             </tr>

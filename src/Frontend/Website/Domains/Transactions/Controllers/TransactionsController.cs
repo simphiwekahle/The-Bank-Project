@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domains.Transactions.Models;
-using Website.Domains.Transactions.Repositories;
+using Website.Domains.Accounts.Services;
 using Website.Domains.Transactions.Services;
 
 namespace Website.Domains.Transactions.Controllers;
@@ -9,7 +9,7 @@ namespace Website.Domains.Transactions.Controllers;
 [Authorize]
 public class TransactionsController(
     ITransactionsServices transactionsServices,
-    ITransactionsRepository transactionsRepository) : Controller
+    IAccountsService accountsServices) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -19,20 +19,30 @@ public class TransactionsController(
 
     public async Task<IActionResult> Details(int id)
     {
-        var transaction = await transactionsRepository.RetrieveSingleAsync(id);
+        if (!ModelState.IsValid)
+            return View();
+
+        var transaction = await transactionsServices.GetSingleTransactionAsync(id);
 
         if (transaction is null)
             return NotFound();
-        
+
         return View(transaction);
     }
 
-	public IActionResult Create()
-	{
-		return View();
-	}
+    public async Task<IActionResult> Create(int id, TransactionsModel model)
+    {
+        if (!ModelState.IsValid)
+            return View();
 
-	[HttpPost]
+        var getAccount = await accountsServices.GetSingleAccountAsync(id);
+
+        model.Account_Code = getAccount!.account.Code;
+
+        return View(model);
+    }
+
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(TransactionsModel transaction)
     {
@@ -41,7 +51,7 @@ public class TransactionsController(
             var addedTransaction = await transactionsServices.AddTransactionAsync(transaction);
 
             if (addedTransaction is not null)
-                return RedirectToAction("Details", "Accounts");
+                return RedirectToAction("Details", "Accounts", new { id = transaction.Account_Code });
         }
         return View(transaction);
     }

@@ -40,7 +40,12 @@ namespace Website.Domains.Accounts.Services
 		{
 			AccountsViewModel accountsView = new();
 
-            accountsView.account = await accountsRepository.RetrieveSingleAsync(code);
+			var account = await accountsRepository.RetrieveSingleAsync(code);
+
+			if (account is null)
+				return null;
+
+			accountsView.account = account;
 			accountsView.transactions = (await transactionsRepository.RetrieveAllAsync())
 				.FindAll(t => t.Account_Code == code);
 

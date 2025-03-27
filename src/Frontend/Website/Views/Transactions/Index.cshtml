@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Shared.Domains.Transactions.Models.TransactionsModel>
+﻿@model List<TransactionsModel>
 
 @{
     ViewData["Title"] = "Transactions";
@@ -30,7 +30,6 @@
                 <td>
                     <a asp-action="Details" asp-route-id="@transaction.Code" class="btn btn-info">Details</a>
                     <a asp-action="Edit" asp-route-id="@transaction.Code" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@transaction.Code" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }

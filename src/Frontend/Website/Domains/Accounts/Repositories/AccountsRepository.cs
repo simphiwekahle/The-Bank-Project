@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using Shared.Domains.Accounts.Models;
-using Website.Configurations;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using Shared.Domains.Accounts.Models;
 using System.Data;
-using Website.Domains.Accounts.Repositories;
+using Website.Configurations;
 
 namespace Website.Domains.Accounts.Repositories;
 
@@ -55,7 +54,7 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
     public async Task<bool> DeleteAsync(int code)
     {
         logger.LogInformation(
-            "Repository => Attempting to delete team {Team}",
+            "Repository => Attempting to delete an account code {Code}",
             code);
 
         using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
@@ -63,7 +62,7 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
         try
         {
             await sqlConnection.ExecuteAsync(
-                sql: storedProcedures.Value.DeleteAccountById,
+                sql: storedProcedures.Value.DeleteAccountByCode,
                 param: new { Code = code },
                 commandType: CommandType.StoredProcedure);
 

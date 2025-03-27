@@ -13,23 +13,17 @@
     <p><strong>ID Number:</strong> @Model.persons.Id_Number</p>
 </div>
 
-@* <form asp-action="Delete">
-    <input type="hidden" asp-for="@Model.persons.Code" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form> *@
-<!-- Delete Form -->
+
 <form id="deleteForm" asp-action="DeleteConfirmed" method="post">
     <input type="hidden" name="id" value="@Model.persons.Code" />
 </form>
 
-<!-- Delete Button (Triggers Modal) -->
+
 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
     Delete
 </button>
 <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 
-<!-- Confirmation Modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -48,7 +42,6 @@
     </div>
 </div>
 
-<!-- JavaScript to Submit Form on Confirmation -->
 <script>
     document.getElementById("confirmDeleteButton").addEventListener("click", function () {
         document.getElementById("deleteForm").submit();

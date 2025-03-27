@@ -53,11 +53,6 @@ public class TransactionsRepository(
 		}
 	}
 
-	public Task<bool> DeleteAsync(int code)
-	{
-		throw new NotImplementedException();
-	}
-
 	public async Task<List<TransactionsModel>> RetrieveAllAsync()
 	{
 		logger.LogInformation("Repository => Attempting to retrieve all persons");
@@ -128,4 +123,36 @@ public class TransactionsRepository(
 	{
 		throw new NotImplementedException();
 	}
+
+    public async Task<bool> DeleteAsync(int code)
+    {
+        logger.LogInformation(
+            "Repository => Attempting to delete an account code {Code}",
+            code);
+
+        using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
+
+        try
+        {
+            await sqlConnection.ExecuteAsync(
+                sql: storedProcedures.Value.DeleteTransactionByCode,
+                param: new { Code = code },
+                commandType: CommandType.StoredProcedure);
+
+            logger.LogInformation(
+                "{Announcement}: Attempt to delete team {Team} completed successfully",
+                "SUCCEEDED", code);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "{Announcement}: Attempt to delete team {Team} was unsuccessful",
+                "FAILED", code);
+
+            return false;
+        }
+    }
 }

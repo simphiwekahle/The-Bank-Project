@@ -85,10 +85,14 @@ public class PersonsController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var success = await personsService.RemovePersonAsync(id);
-        if (success)
-            return RedirectToAction("Index", "Persons");
-
+        if (ModelState.IsValid)
+        {
+            var success = await personsService.RemovePersonAsync(id);
+            
+            if (success)
+                return RedirectToAction("Index", "Persons");
+        }
+        
         return View();
     }
 }

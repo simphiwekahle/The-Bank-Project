@@ -14,7 +14,7 @@ public class AccessController(
      {
         ClaimsPrincipal claimUser = HttpContext.User;
 
-        if (claimUser.Identity.IsAuthenticated)
+        if (claimUser!.Identity.IsAuthenticated)
             return RedirectToAction("Index", "Home");
 
         return View();

@@ -1,4 +1,5 @@
-﻿using Shared.Domains.Transactions.Models;
+﻿using Shared.Domains.Accounts.Models;
+using Shared.Domains.Transactions.Models;
 using Website.Domains.Accounts.Repositories;
 using Website.Domains.Transactions.Repositories;
 
@@ -24,14 +25,14 @@ public class TransactionsServices(
 
         var newTransaction = await transactionsRepository.CreateAsync(transaction!);
 
-        var newBalance = account.Outstanding_Balance += transaction!.Amount;
-
         if (newTransaction is null ||
             newTransaction.Transaction_Date > DateTime.Now ||
             newTransaction.Amount == 0)
         {
             return null;
         }
+
+        var newBalance = account.Outstanding_Balance += transaction!.Amount;
 
         await accountsRepository.UpdateBalanceAsync(transaction.Account_Code, newBalance);
 
@@ -56,11 +57,6 @@ public class TransactionsServices(
             return null;
 
         return transactions;
-    }
-
-    public Task<bool> RemoveTransactionAsync(int code)
-    {
-        throw new NotImplementedException();
     }
 
     public Task<bool> UpdateTransactionAsync(int code, TransactionsModel transaction)

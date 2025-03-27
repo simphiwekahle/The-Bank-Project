@@ -9,7 +9,6 @@
 <table class="table" id="people">
     <thead>
         <tr>
-            <th>Code</th>
             <th>Name</th>
             <th>Surname</th>
             <th>ID Number</th>
@@ -20,7 +19,6 @@
         @foreach (var person in Model)
         {
             <tr>
-                <td>@person.Code</td>
                 <td>@person.Name</td>
                 <td>@person.Surname</td>
                 <td>@person.Id_Number</td>
@@ -53,12 +51,12 @@
 					bottomEnd: 'paging'
 				},
 				autoWidth: true,
-				ordering: true,
+				ordering: false,
 				language: {
 					emptyTable: 'No records found'
 				},
                 columnDefs: [
-                    { type: 'string', targets: [0, 1, 2, 3, 4] }
+                    { type: 'string', targets: [0, 1, 2, 3] }
                 ]
 
 			});

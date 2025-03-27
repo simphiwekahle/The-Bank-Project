@@ -6,12 +6,25 @@
 
 <h2>Person Details</h2>
 
-<div>
-    <p><strong>Code:</strong> @Model.persons.Code</p>
-    <p><strong>Name:</strong> @Model.persons.Name</p>
-    <p><strong>Surname:</strong> @Model.persons.Surname</p>
-    <p><strong>ID Number:</strong> @Model.persons.Id_Number</p>
+<div class="container mt-4">
+    <div class="card" style="max-width: 600px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start" alt="Image">
+            </div>
+            <div class="col-md-8">
+                <div>
+                    <p><strong>Code:</strong> @Model.persons.Code</p>
+                    <p><strong>Name:</strong> @Model.persons.Name</p>
+                    <p><strong>Surname:</strong> @Model.persons.Surname</p>
+                    <p><strong>ID Number:</strong> @Model.persons.Id_Number</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<br />
 
 <p>
     <a asp-action="Edit" asp-route-id="@Model.persons.Code">Edit</a> |
@@ -25,20 +38,25 @@
         <h3>My Accounts</h3>
     </div>
 
+    <br />
 
-
-<div class="container">
-    @foreach(var account in Model.accounts)
-    {
-        <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code">
-            <div class="features">
-                <div>
-                    <p><strong>Account Number:</strong>@account.Account_Number</p>
+    <div class="container">
+        @foreach(var account in Model.accounts)
+        {
+            <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code">
+                <div class="container mt-4">
+                    <div class="card" style="max-width: 600px;">
+                        <div class="row g-0">
+                            <div class="col-md-8">
+                                <div>
+                                    <p><strong>Code:</strong> @account.Account_Number</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-            </div>
-        </a>
-    }
-</div>
+            </a>
+        }
+    </div>
 }
 

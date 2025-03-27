@@ -15,5 +15,7 @@
     <p><strong>Description:</strong> @Model.Description</p>
 </div>
 
-<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-controller="Accounts" asp-action="Details" asp-route-id="@Model.Account_Code" class="btn btn-secondary">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+</a>
 <a asp-action="Edit" asp-route-id="@Model.Code" class="btn btn-warning">Edit</a>
