@@ -22,6 +22,7 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
         dynamicParams.Add(name: "@person_code", value: account.Person_Code, dbType: DbType.String, direction: ParameterDirection.Input);
         dynamicParams.Add(name: "@account_number", value: account.Account_Number, dbType: DbType.String, direction: ParameterDirection.Input);
         dynamicParams.Add(name: "@outstanding_balance", value: account.Outstanding_Balance, dbType: DbType.String, direction: ParameterDirection.Input);
+        dynamicParams.Add(name: "@isActive", value: account.IsActive, dbType: DbType.Boolean, direction: ParameterDirection.Input);
 
         using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
 
@@ -32,7 +33,7 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
                 param: dynamicParams,
                 commandType: CommandType.StoredProcedure);
 
-            account.Code = dynamicParams.Get<int>("@Code");
+            account.Code = dynamicParams.Get<int>("@code");
 
             logger.LogInformation(
                 "{Announcement}: Attempt to create a new person completed successfully with id {Person}",
@@ -206,6 +207,45 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
                 {
                     code,
                     amount
+                },
+                commandType: CommandType.StoredProcedure);
+
+            logger.LogInformation(
+                "{Announcement}: Attempt to update account {Account} completed successfully",
+                "SUCCEEDED", code);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "{Announcement}: Attempt to update account {Account} was unsuccessful",
+                "FAILED", code);
+
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateStatusAsync(int code, bool status)
+    {
+        logger.LogInformation("Repository => Attempting to create a new person");
+
+        var dynamicParams = new DynamicParameters();
+
+        dynamicParams.Add(name: "@code", value: code, dbType: DbType.String, direction: ParameterDirection.Input);
+        dynamicParams.Add(name: "@status", value: status, dbType: DbType.Boolean, direction: ParameterDirection.Input);
+
+        using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
+
+        try
+        {
+            await sqlConnection.ExecuteAsync(
+                sql: storedProcedures.Value.UpdateAccountStatus,
+                param: new
+                {
+                    code,
+                    status
                 },
                 commandType: CommandType.StoredProcedure);
 

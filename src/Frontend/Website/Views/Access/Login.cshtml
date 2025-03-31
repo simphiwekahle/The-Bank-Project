@@ -20,20 +20,25 @@
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
      
-    <label>
-        <input type="checkbox" asp-for="KeepLoggedIn" />
-        Remember Me.
-    </label>
+    <div class="mt-4">
+        <label>
+            <input type="checkbox" asp-for="KeepLoggedIn" />
+            Remember Me.
+        </label>
+    </div>
+    
+    
+    <br />
 
-    <button type="submit" class="btn btn-primary">
-        LOGIN
-    </button>
+    <div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+            LOGIN
+        </button>
+    </div>
+    
 
     @if (ViewData["ValidateMessage"] != null)
     {
-        <br />
-        <br />
-
         <label>@ViewData["ValidateMessage"]</label>
     }
 </form>

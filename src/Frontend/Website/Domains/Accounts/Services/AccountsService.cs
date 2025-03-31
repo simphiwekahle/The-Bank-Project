@@ -1,4 +1,5 @@
 ﻿using Shared.Domains.Accounts.Models;
+using System.Globalization;
 using Website.Domains.Accounts.Repositories;
 using Website.Domains.Accounts.ViewModels;
 using Website.Domains.Entities.Persons.Repositories;
@@ -16,14 +17,20 @@ namespace Website.Domains.Accounts.Services
 			if (account is null)
 				return null;
 
+			var accountNumber = GenerarteAccountNumber();
+
 			var accountCheck = (await accountsRepository.RetrieveAllAsync())
-				.Find(a => a.Account_Number.Equals(account!.Account_Number));
+				.Find(a => a.Account_Number.Equals(accountNumber));
 
 			var personCheck = await personsRepository.RetrieveSingleAsync(account.Person_Code);
 
 			if (accountCheck is null && personCheck is not null)
 			{
-				var newAccount = await accountsRepository.CreateAsync(account);
+				account.Account_Number = accountNumber;
+				account.IsActive = true;
+				account.Outstanding_Balance = 0;
+
+                var newAccount = await accountsRepository.CreateAsync(account);
 
 				return newAccount;
 			}
@@ -64,5 +71,18 @@ namespace Website.Domains.Accounts.Services
 		{
 			throw new NotImplementedException();
 		}
+
+		private static string GenerarteAccountNumber()
+		{
+            Random random = new Random();
+            string result = "";
+
+            for (int i = 0; i < 9; i++)
+            {
+                result += random.Next(0, 10);
+            }
+
+            return result;
+        }
 	}
 }

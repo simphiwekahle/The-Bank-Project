@@ -1,4 +1,4 @@
-﻿@model Shared.Domains.Accounts.Models.AccountsModel
+﻿@model AccountsModel
 
 @{
     ViewData["Title"] = "Create Account";
@@ -8,8 +8,7 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="Person_Code"></label>
-        <input asp-for="Person_Code" class="form-control" />
+        <input asp-for="Person_Code" type="hidden" />
     </div>
     <div class="form-group">
         <label asp-for="Account_Number"></label>
@@ -22,4 +21,4 @@
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
 
-<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-action="Details" class="btn btn-secondary">Back to List</a>

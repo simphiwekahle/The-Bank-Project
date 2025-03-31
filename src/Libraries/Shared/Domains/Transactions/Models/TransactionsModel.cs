@@ -13,4 +13,6 @@ public class TransactionsModel
 	[Display(Name = "Amount")]
 	public decimal Amount { get; set; }
 	public string Description { get; set; } = string.Empty;
+
+    public int Transaction_Type_Id { get; set; }
 }

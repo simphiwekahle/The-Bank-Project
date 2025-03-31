@@ -15,4 +15,5 @@ public class AccountsModel
     [Display(Name = "Account Number")]
     public string Account_Number { get; set; } = string.Empty;
     public decimal Outstanding_Balance { get; set; }
+    public bool IsActive { get; set; }
 }

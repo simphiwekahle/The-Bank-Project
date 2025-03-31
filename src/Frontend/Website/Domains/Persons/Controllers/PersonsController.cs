@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Shared.Domains.Persons.Models;
 using Website.Domains.Persons.Services;
 
@@ -31,29 +32,36 @@ public class PersonsController(
 
     public IActionResult Create()
     {
-        return View();
+        return View(new PersonsModel());
     }
 
-    [Authorize]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(PersonsModel person)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            var addedPerson = await personsService.AddPersonAsync(person);
-            if (addedPerson != null)
-                return RedirectToAction("Login", "Access");
+            return View(person);
         }
+
+        var addedPerson = await personsService.AddPersonAsync(person);
+        if (addedPerson != null)
+        {
+            TempData["SuccessMessage"] = $"{addedPerson.Name} {addedPerson.Surname} has been created successfully!";
+            return RedirectToAction("Login", "Access");
+        }
+
+        TempData["ErrorMessage"] = "A person with this ID Number already exists.";
         return View(person);
     }
 
     public async Task<IActionResult> Edit(int id)
     {
-        //var person = await personsService.GetSinglePersonAsync(id);
-        //if (person == null) return NotFound();
-        //return View(person);
-        return null;
+        var person = await personsService.GetSinglePersonAsync(id);
+        if (person == null)
+            return NotFound();
+
+        return View(person);
     }
 
     [HttpPost]
@@ -71,28 +79,25 @@ public class PersonsController(
         return View(person);
     }
 
-    public async Task<IActionResult> Delete(int id)
-    {
-        var person = await personsService.GetSinglePersonAsync(id);
-
-        if (person == null) 
-            return NotFound();
-
-        return View(person);
-    }
-
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         if (ModelState.IsValid)
         {
-            var success = await personsService.RemovePersonAsync(id);
-            
-            if (success)
-                return RedirectToAction("Index", "Persons");
+            var person = await personsService.GetSinglePersonAsync(id);
+            var result = await personsService.RemovePersonAsync(id);
+
+            if (result)
+            {
+                TempData["SuccessMessage"] = $"{person!.persons.Name} {person!.persons.Surname} has been deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = $"Failed to delete {person!.persons.Name} {person!.persons.Surname}. Ensure they have no linked accounts.";
+            }
+
+            return RedirectToAction("Index");
         }
-        
         return View();
     }
 }

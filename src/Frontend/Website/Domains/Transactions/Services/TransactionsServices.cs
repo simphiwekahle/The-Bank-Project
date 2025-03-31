@@ -2,6 +2,7 @@
 using Shared.Domains.Transactions.Models;
 using Website.Domains.Accounts.Repositories;
 using Website.Domains.Transactions.Repositories;
+using Website.Domains.Transactions.ViewModels;
 
 namespace Website.Domains.Transactions.Services;
 
@@ -9,21 +10,29 @@ public class TransactionsServices(
     ITransactionsRepository transactionsRepository,
     IAccountsRepository accountsRepository) : ITransactionsServices
 {
-    public async Task<TransactionsModel?> AddTransactionAsync(TransactionsModel transaction)
+    public async Task<TransactionsModel?> AddTransactionAsync(TransactionsViewModel transaction)
     {
-        var account = await accountsRepository.RetrieveSingleAsync(transaction!.Account_Code);
+        var account = await accountsRepository.RetrieveSingleAsync(transaction!.transactions.Account_Code);
 
         if (account is null)
             return null;
 
         if (transaction is not null)
         {
-            transaction.Description = "New transaction added";
-            transaction.Transaction_Date = DateTime.Now;
-            transaction.Capture_Date = DateTime.Now;
+            if (transaction.transactions.Transaction_Type_Id == 1)
+            {
+                transaction.transactions.Description = "New Debit transaction added";
+            }
+            else
+            {
+                transaction.transactions.Description = "New Credit transaction added";
+            }
+            
+            transaction.transactions.Transaction_Date = DateTime.Now;
+            transaction.transactions.Capture_Date = DateTime.Now;
         }
 
-        var newTransaction = await transactionsRepository.CreateAsync(transaction!);
+        var newTransaction = await transactionsRepository.CreateAsync(transaction!.transactions);
 
         if (newTransaction is null ||
             newTransaction.Transaction_Date > DateTime.Now ||
@@ -32,9 +41,21 @@ public class TransactionsServices(
             return null;
         }
 
-        var newBalance = account.Outstanding_Balance += transaction!.Amount;
+        var newBalance = account.Outstanding_Balance;
 
-        await accountsRepository.UpdateBalanceAsync(transaction.Account_Code, newBalance);
+        switch (transaction.transactions.Transaction_Type_Id)
+        {
+            case 1:
+                newBalance += transaction.transactions.Amount;
+                break;
+            case 2:
+                newBalance -= transaction.transactions.Amount;
+                break;
+            default:
+                return null;
+        }
+
+        await accountsRepository.UpdateBalanceAsync(transaction.transactions.Account_Code, newBalance);
 
         return newTransaction;
     }

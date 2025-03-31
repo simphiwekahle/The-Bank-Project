@@ -84,7 +84,37 @@ public class TransactionsRepository(
 		return transactions;
 	}
 
-	public async Task<TransactionsModel?> RetrieveSingleAsync(int code)
+    public async Task<List<TransactionTypesModel>> RetrieveAllTypesAsync()
+	{
+        logger.LogInformation("Repository => Attempting to retrieve all persons");
+
+        using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
+
+        var transactionTypes = new List<TransactionTypesModel>();
+
+        try
+        {
+            transactionTypes = (await sqlConnection.QueryAsync<TransactionTypesModel>(
+                    sql: storedProcedures.Value.GetAllTransactionTypes,
+                    commandType: CommandType.StoredProcedure))
+                    .ToList();
+
+            logger.LogInformation(
+                "{Announcement}: Attempt to retrieve all persons completed successfully",
+                "SUCCEEDED");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "{Announcement}: Attempt to retrieve all persons was unsuccessful",
+                "FAILED");
+        }
+
+        return transactionTypes;
+    }
+
+    public async Task<TransactionsModel?> RetrieveSingleAsync(int code)
 	{
 		logger.LogInformation(
 		"Repository => Attempting to retrieve person {Person}",

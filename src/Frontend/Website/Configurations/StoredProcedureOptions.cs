@@ -14,6 +14,7 @@ public class StoredProcedureOptions
 	public string UpdateAccountById { get; set; } = string.Empty;
 	public string DeleteAccountByCode { get; set; } = string.Empty;
 	public string UpdateAccountBalance { get; set; } = string.Empty;
+	public string UpdateAccountStatus { get; set; } = string.Empty;
 
 	public string GetAllTransactions { get; set; } = string.Empty;
 	public string GetTransactionByCode { get; set; } = string.Empty;

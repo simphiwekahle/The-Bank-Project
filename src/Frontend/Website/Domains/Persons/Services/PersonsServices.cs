@@ -41,7 +41,12 @@ public class PersonsServices(
     {
         PersonsViewModel personsView = new();
 
-        personsView.persons = await personsRepository.RetrieveSingleAsync(code);
+        var person = await personsRepository!.RetrieveSingleAsync(code);
+
+        if (person is null)
+            return null;
+
+        personsView.persons = person;
         personsView.accounts = (await accountsRepository.RetrieveAllAsync())
             .FindAll(a => a.Person_Code == code);
 

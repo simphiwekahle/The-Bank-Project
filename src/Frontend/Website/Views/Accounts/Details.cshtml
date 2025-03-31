@@ -4,13 +4,29 @@
     ViewData["Title"] = "Account Details";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h2>My Account</h2>
 
 <div class="container mt-4">
     <div class="card" style="max-width: 600px;">
         <div class="row g-0">
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start">
+            <div class="col-md-4 d-flex align-items-center justify-content-center bg-light">
+                <i class="fa-solid fa-wallet fa-5x text-primary"></i>
             </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -23,6 +39,7 @@
         </div>
     </div>
 </div>
+
 
 <br />
 
@@ -38,42 +55,80 @@
     Make A Transaction
 </a>
 
-<div>
-    <h3>My Transactions</h3>
-</div>
+@if (Model.transactions.Count is not 0)
+{
+    <div class="mb-4 mt-4">
+        <h3>Account Transactions</h3>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Person Code</th>
-            <th>transaction Number</th>
-            <th>Outstanding Balance</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var transaction in Model.transactions)
-        {
+    <table class="table table-striped" id="transactions">
+        <thead>
             <tr>
-                <td>@transaction.Code</td>
-                <td>@transaction.Account_Code</td>
-                <td>@transaction.Transaction_Date</td>
-                <td>@transaction.Capture_Date</td>
-                <td>@transaction.Amount.ToString("C", new CultureInfo("en-ZA"))</td>
-                <td>@transaction.Description</td>
-                <td>
-                    <a asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Code" class="btn btn-info">
-                        <i class="fa fa-file-text"></i>
-                    </a>
-                    <a asp-action="Edit" asp-route-id="@transaction.Code" class="btn btn-warning">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@transaction.Code" class="btn btn-danger">
-                        <i class="fa fa-trash"></i>
-                    </a>
-                </td>
+                <th>Code</th>
+                <th>Person Code</th>
+                <th>transaction Number</th>
+                <th>Outstanding Balance</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var transaction in Model.transactions)
+            {
+                <tr>
+                    <td>@transaction.Code</td>
+                    <td>@transaction.Account_Code</td>
+                    <td>@transaction.Transaction_Date</td>
+                    <td>@transaction.Capture_Date</td>
+                    <td>@transaction.Amount.ToString("C", new CultureInfo("en-ZA"))</td>
+                    <td>@transaction.Description</td>
+                    <td>
+                        <a asp-controller="Transactions" asp-action="Details" asp-route-id="@transaction.Code" class="btn btn-info">
+                            <i class="fa fa-file-text"></i>
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@transaction.Code" class="btn btn-warning">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@transaction.Code" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@section Styles {
+    <link href="~/lib/datatables.net-bs5/css/datatables.bootstrap5.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/lib/datatables.net/js/datatables.min.js"></script>
+    <script src="~/lib/datatables.net-bs5/js/datatables.bootstrap5.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#transactions').DataTable({
+                layout: {
+                    topStart: 'pageLength',
+                    topEnd: 'search',
+                    bottomStart: 'info',
+                    bottomEnd: 'paging'
+                },
+                autoWidth: true,
+                ordering: false,
+                language: {
+                    emptyTable: 'No records found'
+                },
+                columnDefs: [
+                    { type: 'string', targets: [0, 1, 2, 3] }
+                ]
+            });
+        });
+    </script>
+}

@@ -6,13 +6,24 @@
 
 <h2>Transaction Details</h2>
 
-<div>
-    <p><strong>Code:</strong> @Model.Code</p>
-    <p><strong>Account Code:</strong> @Model.Account_Code</p>
-    <p><strong>Transaction Date:</strong> @Model.Transaction_Date</p>
-    <p><strong>Capture Date:</strong> @Model.Capture_Date</p>
-    <p><strong>Amount:</strong> @Model.Amount.ToString("C", new CultureInfo("en-ZA"))</p>
-    <p><strong>Description:</strong> @Model.Description</p>
+<div class="container mt-4 mb-4">
+    <div class="card" style="max-width: 600px;">
+        <div class="row g-0">
+            <div class="col-md-4 d-flex align-items-center justify-content-center bg-light">
+                <i class="fa fa-exchange fa-5x text-primary"></i>
+            </div>
+            <div class="col-md-8 mt-2">
+                <div>
+                    <p><strong>Code:</strong> @Model.Code</p>
+                    <p><strong>Account Code:</strong> @Model.Account_Code</p>
+                    <p><strong>Transaction Date:</strong> @Model.Transaction_Date</p>
+                    <p><strong>Capture Date:</strong> @Model.Capture_Date</p>
+                    <p><strong>Amount:</strong> @Model.Amount.ToString("C", new CultureInfo("en-ZA"))</p>
+                    <p><strong>Description:</strong> @Model.Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <a asp-controller="Accounts" asp-action="Details" asp-route-id="@Model.Account_Code" class="btn btn-secondary">

@@ -1,25 +1,33 @@
-﻿@model TransactionsModel
+﻿@model TransactionsViewModel
 
 @{
     ViewData["Title"] = "Create Transaction";
 }
 
-<h2>Make A Transaction</h2>
+<h2 class="mb-4">Make A Transaction</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <input asp-for="Account_Code" type="hidden" />
+<form asp-action="Create" method="post" class="needs-validation" novalidate>
+    <input asp-for="transactions.Account_Code" type="hidden" />
+
+    <div class="mb-3">
+        <label asp-for="transactions.Transaction_Type_Id" class="form-label">Transaction Type</label>
+        <select asp-for="transactions.Transaction_Type_Id" class="form-select"
+                asp-items="@(new SelectList(Model.transactionsTypes, "Code", "Transaction_Type"))">
+        </select>
     </div>
-    <div class="form-group">
-        <label asp-for="Amount"></label>
-        <input asp-for="Amount" class="form-control" />
+
+    <div class="mb-3">
+        <label asp-for="transactions.Amount" class="form-label">Amount</label>
+        <input asp-for="transactions.Amount" class="form-control" required />
     </div>
-    
-    <button type="submit" class="btn btn-primary">Create</button>
-    
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-circle"></i> Create
+    </button>
 </form>
 
-<a asp-action="Details" asp-controller="Accounts" asp-route-id="@Model?.Account_Code" class="btn btn-secondary">Back to List</a>
+
+<a asp-action="Details" asp-controller="Accounts" asp-route-id="@Model?.transactions.Account_Code" class="btn btn-secondary">Back to List</a>
 
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">

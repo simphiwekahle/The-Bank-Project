@@ -4,15 +4,31 @@
     ViewData["Title"] = "Person Details";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h2>Person Details</h2>
 
 <div class="container mt-4">
     <div class="card" style="max-width: 600px;">
         <div class="row g-0">
-            <div class="col-md-4">
-                <img src="https://via.placeholder.com/150" class="img-fluid rounded-start" alt="Image">
+            <div class="col-md-4 d-flex align-items-center justify-content-center bg-light">
+                <i class="fa-solid fa-user fa-5x text-primary"></i>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mt-2">
                 <div>
                     <p><strong>Code:</strong> @Model.persons.Code</p>
                     <p><strong>Name:</strong> @Model.persons.Name</p>
@@ -27,36 +43,135 @@
 <br />
 
 <p>
-    <a asp-action="Edit" asp-route-id="@Model.persons.Code">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.persons.Code" class="btn btn-outline-warning">Edit</a> |
     <a asp-action="Index">Back to List</a>
-    <a asp-controller="Accounts" asp-action="Create" class="btn btn-warning">Create Account</a>
+
+    <a href="#" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#confirmCreateModal"
+       onclick="setCreateUrl('@Url.Action("Create", "Accounts", new { id = Model.persons.Code })')">
+        Create an Account
+    </a>
+
 </p>
+
+<div class="modal fade" id="confirmCreateModal" tabindex="-1" aria-labelledby="confirmCreateLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmCreateLabel">Confirm Account Creation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to create an account for this person?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmCreate">Yes, Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @if (Model.accounts.Count is not 0)
 {
-    <div>
+    <div class="mb-4">
         <h3>My Accounts</h3>
     </div>
 
-    <br />
+    <table class="table table-striped" id="accounts">
+        <thead>
+            <tr>
+                <th>Person Code</th>
+                <th>Account Number</th>
+                <th>Outstanding Balance</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in Model.accounts)
+            {
+                <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code">
 
-    <div class="container">
-        @foreach(var account in Model.accounts)
-        {
-            <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code">
-                <div class="container mt-4">
-                    <div class="card" style="max-width: 600px;">
-                        <div class="row g-0">
-                            <div class="col-md-8">
-                                <div>
-                                    <p><strong>Code:</strong> @account.Account_Number</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        }
-    </div>
+                <tr>
+                    <td>@account.Person_Code</td>
+                    <td>@account.Account_Number</td>
+                    <td>@account.Outstanding_Balance.ToString("C", new CultureInfo("en-ZA"))</td>
+                    <td>
+                        <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code" class="btn btn-info">
+                            <i class="fa fa-file-text"></i>
+                        </a>
+                        <a asp-controller="Accounts" asp-action="Edit" asp-route-id="@account.Code" class="btn btn-warning">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a asp-controller="Accounts" asp-action="Delete" asp-route-id="@account.Code" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                    </a>
+            }
+        </tbody>
+    </table>
+}
+
+
+@section Styles {
+    <link href="~/lib/datatables.net-bs5/css/datatables.bootstrap5.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+
+    <script src="~/lib/datatables.net/js/datatables.min.js"></script>
+    <script src="~/lib/datatables.net-bs5/js/datatables.bootstrap5.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#accounts').DataTable({
+                layout: {
+                    topStart: 'pageLength',
+                    topEnd: 'search',
+                    bottomStart: 'info',
+                    bottomEnd: 'paging'
+                },
+                autoWidth: true,
+                ordering: false,
+                language: {
+                    emptyTable: 'No records found'
+                },
+                columnDefs: [
+                    { type: 'string', targets: [0, 1, 2, 3] }
+                ]
+
+            });
+
+        });
+
+            function setCreateUrl(url) {
+        $("#confirmCreate").data("url", url);
+        };
+
+                $(document).ready(function () {
+            $("#confirmCreate").click(function () {
+                $.ajax({
+                    url: "@Url.Action("Create", "Accounts", new { id = Model.persons.Code })",
+                    type: "POST",
+                    data: {},
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            window.location.href = "@Url.Action("Details", "Persons", new { id = Model.persons.Code })";
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Error creating account. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
 }
 
