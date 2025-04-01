@@ -1,5 +1,5 @@
 ﻿using Shared.Domains.Accounts.Models;
-using System.Globalization;
+using System.Text;
 using Website.Domains.Accounts.Repositories;
 using Website.Domains.Accounts.ViewModels;
 using Website.Domains.Entities.Persons.Repositories;
@@ -75,14 +75,14 @@ namespace Website.Domains.Accounts.Services
 		private static string GenerarteAccountNumber()
 		{
             Random random = new Random();
-            string result = "";
+            StringBuilder result = new StringBuilder();
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 8; i++)
             {
-                result += random.Next(0, 10);
+                result.Append(random.Next(0, 10));
             }
 
-            return result;
+			return result.ToString();
         }
 	}
 }

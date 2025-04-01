@@ -12,9 +12,9 @@ public class AccessController(
 {
      public IActionResult Login()
      {
-        ClaimsPrincipal claimUser = HttpContext.User;
+        ClaimsPrincipal? claimUser = HttpContext.User;
 
-        if (claimUser!.Identity.IsAuthenticated)
+        if (claimUser.Identity!.IsAuthenticated)
             return RedirectToAction("Index", "Home");
 
         return View();
@@ -32,10 +32,10 @@ public class AccessController(
 
             if (findPerson is not null)
             {
-                List<Claim> claims = new List<Claim> {
+                List<Claim> claims = [
                     new Claim(ClaimTypes.NameIdentifier, modelLogin.Email),
                     new Claim("OtherProperties", "Example Role")
-                };
+                ];
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
                     CookieAuthenticationDefaults.AuthenticationScheme);
 

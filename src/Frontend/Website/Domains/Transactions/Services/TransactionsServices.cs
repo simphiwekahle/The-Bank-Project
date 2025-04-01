@@ -1,5 +1,4 @@
-﻿using Shared.Domains.Accounts.Models;
-using Shared.Domains.Transactions.Models;
+﻿using Shared.Domains.Transactions.Models;
 using Website.Domains.Accounts.Repositories;
 using Website.Domains.Transactions.Repositories;
 using Website.Domains.Transactions.ViewModels;
@@ -27,7 +26,7 @@ public class TransactionsServices(
             {
                 transaction.transactions.Description = "New Credit transaction added";
             }
-            
+
             transaction.transactions.Transaction_Date = DateTime.Now;
             transaction.transactions.Capture_Date = DateTime.Now;
         }

@@ -14,7 +14,7 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
 {
     public async Task<AccountsModel?> CreateAsync(AccountsModel account)
     {
-        logger.LogInformation("Repository => Attempting to create a new person");
+        logger.LogInformation("Repository => Attempting to create a new account");
 
         var dynamicParams = new DynamicParameters();
 
@@ -36,7 +36,7 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IAccountsRepository
             account.Code = dynamicParams.Get<int>("@code");
 
             logger.LogInformation(
-                "{Announcement}: Attempt to create a new person completed successfully with id {Person}",
+                "{Announcement}: Attempt to create a new account completed successfully with id {Person}",
                 "SUCCEEDED", account.Code);
 
             return account;

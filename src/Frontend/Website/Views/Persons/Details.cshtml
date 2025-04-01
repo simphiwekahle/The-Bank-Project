@@ -29,7 +29,7 @@
                 <i class="fa-solid fa-user fa-5x text-primary"></i>
             </div>
             <div class="col-md-8 mt-2">
-                <div>
+                <div class="card-body">
                     <p><strong>Code:</strong> @Model.persons.Code</p>
                     <p><strong>Name:</strong> @Model.persons.Name</p>
                     <p><strong>Surname:</strong> @Model.persons.Surname</p>
@@ -46,10 +46,12 @@
     <a asp-action="Edit" asp-route-id="@Model.persons.Code" class="btn btn-outline-warning">Edit</a> |
     <a asp-action="Index">Back to List</a>
 
-    <a href="#" class="btn btn-warning mb-2" data-bs-toggle="modal" data-bs-target="#confirmCreateModal"
-       onclick="setCreateUrl('@Url.Action("Create", "Accounts", new { id = Model.persons.Code })')">
-        Create an Account
+    <a href="javascript:void(0);" 
+        onclick="openConfirmCreateModal('@Model.persons.Code', '@Model.persons.Name', '@Model.persons.Surname');"
+        class="btn btn-primary">
+        <i class="fa fa-plus"></i>
     </a>
+
 
 </p>
 
@@ -61,15 +63,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to create an account for this person?
+                Are you sure you want to create an account for <span id="personName"></span>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmCreate">Yes, Create</button>
+                <form id="createForm" method="post" action="@Url.Action("Create", "Accounts")">
+                    @Html.AntiForgeryToken() <!-- Include anti-forgery token -->
+                    <input type="hidden" id="personId" name="id" value="" /> <!-- Set the value dynamically via JavaScript -->
+                    <button type="submit" class="btn btn-primary">Yes, Create</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
 @if (Model.accounts.Count is not 0)
@@ -90,8 +97,6 @@
         <tbody>
             @foreach (var account in Model.accounts)
             {
-                <a asp-controller="Accounts" asp-action="Details" asp-route-id="@account.Code">
-
                 <tr>
                     <td>@account.Person_Code</td>
                     <td>@account.Account_Number</td>
@@ -107,10 +112,11 @@
                             <i class="fa fa-trash"></i>
                         </a>
                     </td>
-                    </a>
+                </tr>
             }
         </tbody>
     </table>
+
 }
 
 
@@ -127,8 +133,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
-            $('#accounts').DataTable({
+            $("#accounts").DataTable({
                 layout: {
                     topStart: 'pageLength',
                     topEnd: 'search',
@@ -140,38 +145,26 @@
                 language: {
                     emptyTable: 'No records found'
                 },
-                columnDefs: [
-                    { type: 'string', targets: [0, 1, 2, 3] }
-                ]
-
+                columnDefs: [{ type: 'string', targets: [0, 1, 2, 3] }]
             });
-
-        });
-
-            function setCreateUrl(url) {
-        $("#confirmCreate").data("url", url);
-        };
-
-                $(document).ready(function () {
-            $("#confirmCreate").click(function () {
-                $.ajax({
-                    url: "@Url.Action("Create", "Accounts", new { id = Model.persons.Code })",
-                    type: "POST",
-                    data: {},
-                    success: function (response) {
-                        if (response.success) {
-                            alert(response.message);
-                            window.location.href = "@Url.Action("Details", "Persons", new { id = Model.persons.Code })";
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function () {
-                        alert("Error creating account. Please try again.");
-                    }
-                });
-            });
-        });
+            
+            function setCreateUrl(createUrl) {
+                document.getElementById("createForm").action = createUrl;
+            }
     </script>
+
+    <script>
+        function openConfirmCreateModal(personId, personName, personSurname) {
+            
+            document.getElementById('personName').innerText = personName + " " + personSurname;
+
+            document.getElementById('personId').value = personId;
+
+            var myModal = new bootstrap.Modal(document.getElementById('confirmCreateModal'));
+            myModal.show();
+        }
+    </script>
+
+
 }
 

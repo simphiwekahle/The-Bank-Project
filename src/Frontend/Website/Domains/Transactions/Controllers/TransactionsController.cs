@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domains.Transactions.Models;
+using System.Globalization;
 using Website.Domains.Accounts.Services;
 using Website.Domains.Transactions.Repositories;
 using Website.Domains.Transactions.Services;
@@ -54,7 +55,7 @@ public class TransactionsController(
         {
             var addedTransaction = await transactionsServices.AddTransactionAsync(transaction);
 
-            TempData["SuccessMessage"] = "Transaction has been created successfully.";
+            TempData["SuccessMessage"] = $"{addedTransaction!.Transaction_Type_Id} transaction of amount {transaction.transactions.Amount.ToString("C", new CultureInfo("en-ZA"))} has been added to account code {transaction.transactions.Account_Code} successfully.";
             if (addedTransaction is not null)
                 return RedirectToAction("Details", "Accounts", new { id = transaction.transactions.Account_Code });
         }

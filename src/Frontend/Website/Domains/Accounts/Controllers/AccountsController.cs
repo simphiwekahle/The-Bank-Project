@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Domains.Accounts.Models;
+using Shared.Domains.Persons.Models;
+using System.Data.Common;
 using System.Reflection;
 using System.Transactions;
 using Website.Domains.Accounts.Repositories;
@@ -57,18 +59,19 @@ public class AccountsController(
             var createdAccount = await accountsService.AddAccountAsync(newAccount);
             if (createdAccount != null)
             {
-                TempData["SuccessMessage"] = $"{createdAccount.Account_Number} created successfully.";
-                return Json(new { success = true, message = "Account created successfully." });
+                TempData["SuccessMessage"] = $"{createdAccount.Account_Number} created successfully for {person.persons.Name} {person.persons.Surname}.";
+                return RedirectToAction("Details", "Persons", new { id = createdAccount.Person_Code });
             }
 
             return Json(new { success = false, message = "Failed to create an account. Account might already exist." });
-        }
+        }   
         catch (Exception ex)
         {
             logger.LogError(ex, "Error creating account.");
             return Json(new { success = false, message = $"Server error: {ex.Message}" });
         }
     }
+
 
 
 
