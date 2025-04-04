@@ -55,9 +55,14 @@ public class TransactionsController(
         {
             var addedTransaction = await transactionsServices.AddTransactionAsync(transaction);
 
+            if (addedTransaction is null)
+            {
+                TempData["ErrorMessage"] = $"Attempt to create transaction for account {transaction.transactions.Account_Code} has failed, Please Try again";
+                return RedirectToAction("Create", new { id = transaction.transactions.Account_Code });
+            }
+
             TempData["SuccessMessage"] = $"{addedTransaction!.Transaction_Type_Id} transaction of amount {transaction.transactions.Amount.ToString("C", new CultureInfo("en-ZA"))} has been added to account code {transaction.transactions.Account_Code} successfully.";
-            if (addedTransaction is not null)
-                return RedirectToAction("Details", "Accounts", new { id = transaction.transactions.Account_Code });
+            return RedirectToAction("Details", "Accounts", new { id = transaction.transactions.Account_Code });
         }
         return View(transaction);
     }

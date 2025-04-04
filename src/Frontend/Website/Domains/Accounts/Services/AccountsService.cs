@@ -22,9 +22,14 @@ namespace Website.Domains.Accounts.Services
 			var accountCheck = (await accountsRepository.RetrieveAllAsync())
 				.Find(a => a.Account_Number.Equals(accountNumber));
 
+			if (accountCheck is not null)
+			{
+				return null;
+			}
+
 			var personCheck = await personsRepository.RetrieveSingleAsync(account.Person_Code);
 
-			if (accountCheck is null && personCheck is not null)
+			if (personCheck is not null)
 			{
 				account.Account_Number = accountNumber;
 				account.IsActive = true;
@@ -84,5 +89,10 @@ namespace Website.Domains.Accounts.Services
 
 			return result.ToString();
         }
-	}
+
+        public Task<bool> UpdateAccountStatusAsync(int code, AccountsModel account)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

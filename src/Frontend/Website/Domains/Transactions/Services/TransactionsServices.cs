@@ -16,6 +16,9 @@ public class TransactionsServices(
         if (account is null)
             return null;
 
+        if (!account!.IsActive)
+            return null;
+
         if (transaction is not null)
         {
             if (transaction.transactions.Transaction_Type_Id == 1)

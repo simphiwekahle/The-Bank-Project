@@ -9,9 +9,9 @@ using Website.Domains.Entities.Persons.Repositories;
 namespace ManagePeopleAPI.Domains.Entities.Persons.Repositories;
 
 public class PersonsRepository(
-ILogger<PersonsRepository> logger,
-IOptionsSnapshot<ConnectionStringOptions> connectionStrings,
-IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IPersonsRepository
+	ILogger<PersonsRepository> logger,
+	IOptionsSnapshot<ConnectionStringOptions> connectionStrings,
+	IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IPersonsRepository
 {
 	public async Task<PersonsModel?> CreateAsync(PersonsModel person)
 	{
@@ -96,11 +96,10 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IPersonsRepository
 
 		try
 		{
-			persons =
-				(await sqlConnection.QueryAsync<PersonsModel>(
-					sql: storedProcedures.Value.GetAllPersons,
-					commandType: CommandType.StoredProcedure))
-					.ToList();
+			persons = (await sqlConnection.QueryAsync<PersonsModel>(
+				sql: storedProcedures.Value.GetAllPersons,
+				commandType: CommandType.StoredProcedure))
+				.ToList();
 
 			logger.LogInformation(
 				"{Announcement}: Attempt to retrieve all persons completed successfully",
@@ -154,10 +153,6 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IPersonsRepository
 
 	public async Task<bool> UpdateAsync(int code, PersonsModel person)
 	{
-		logger.LogInformation(
-		 "Repository => Attempting to update team {Team}",
-		 code);
-
 		using var sqlConnection = new SqlConnection(connectionStrings.Value.TransactionsDB);
 
 		try
@@ -166,16 +161,11 @@ IOptionsSnapshot<StoredProcedureOptions> storedProcedures) : IPersonsRepository
 				sql: storedProcedures.Value.UpdatePersonByCode,
 				param: new
 				{
-					//code,
+					code,
 					person.Name,
-					person.Surname,
-					person.Id_Number
+					person.Surname
 				},
 				commandType: CommandType.StoredProcedure);
-
-			logger.LogInformation(
-				"{Announcement}: Attempt to update person {Person} completed successfully",
-				"SUCCEEDED", code);
 
 			return true;
 		}

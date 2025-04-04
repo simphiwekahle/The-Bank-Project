@@ -58,23 +58,30 @@ public class PersonsController(
     public async Task<IActionResult> Edit(int id)
     {
         var person = await personsService.GetSinglePersonAsync(id);
+        
         if (person == null)
             return NotFound();
 
-        return View(person);
+        PersonsModel model = person!.persons;
+
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, PersonsModel person)
     {
-        if (id != person.Code) return NotFound();
+        if (id != person.Code) 
+            return NotFound();
 
         if (ModelState.IsValid)
         {
             var success = await personsService.UpdatePersonAsync(id, person);
             if (success)
-                return RedirectToAction(nameof(Index));
+            {
+                TempData["SuccessMessage"] = $"Client {person.Name} {person.Surname} has updated their profile successfully.";
+                return RedirectToAction(nameof(Index)); 
+            }
         }
         return View(person);
     }

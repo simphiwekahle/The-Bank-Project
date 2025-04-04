@@ -9,5 +9,6 @@ public interface IAccountsService
 	Task<List<AccountsModel>?> GetAccountsAsync();
 	Task<AccountsViewModel?> GetSingleAccountAsync(int code);
 	Task<bool> UpdateAccountAsync(int code, AccountsModel account);
+	Task<bool> UpdateAccountStatusAsync(int code, AccountsModel account);
 	Task<bool> RemoveAccountAsync(int code);
 }

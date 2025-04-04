@@ -44,6 +44,9 @@
                     <a asp-action="Details" asp-route-id="@person.Code" class="btn btn-info">
                         <i class="fa fa-file-text"></i>
                     </a> |
+                    <a asp-action="Edit" asp-route-id="@person.Code" class="btn btn-warning">
+                        <i class="fa fa-pencil-square"></i>
+                    </a> |
                     <a href="#" class="btn btn-danger mb-2" data-bs-toggle="modal" data-bs-target="#deleteModal"
                        onclick="setDeleteUrl('@Url.Action("DeleteConfirmed", "Persons", new { id = person.Code })')">
                         <i class="fa fa-trash"></i>
